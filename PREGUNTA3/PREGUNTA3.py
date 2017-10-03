@@ -1,7 +1,11 @@
 import sys
+import sqlite3
+
+conn = sqlite3.connect('tarea2')
 
 class Entrada:
-    def __init__(self, pelicula_id, funcion, cantidad):
+    def __init__(self, cine_id, pelicula_id, funcion, cantidad):
+        self.cine_id = cine_id
         self.pelicula_id = pelicula_id
         self.funcion = funcion
         self.cantidad = cantidad
@@ -27,11 +31,13 @@ class Cine:
     def listar_funciones(self, pelicula_id):
         return self.lista_peliculas[int(pelicula_id) - 1].funciones
 
-    def guardar_entrada(self, id_pelicula_elegida, funcion_elegida, cantidad):
-        self.entradas.append(Entrada(id_pelicula_elegida, funcion_elegida, cantidad))
-        return len(self.entradas)
-
-class AdapterPeliculas:
+    def guardar_entrada(self, cine_id, id_pelicula_elegida, funcion_elegida, cantidad):
+        # entrada = Entrada(cine_id,id_pelicula_elegida, funcion_elegida, cantidad)
+        c = conn.cursor()
+        c.execute('INSERT INTO entrada VALUES ('+ cine_id +',' + id_pelicula_elegida + ','+ funcion_elegida +','+ cantidad + ')')
+        conn.commit()
+        c = conn.cursor()
+        return c.execute('SELECT * FROM entrada').arraysize
 
 
 class CinePlaneta(Cine):
@@ -49,6 +55,7 @@ class CinePlaneta(Cine):
         self.lista_peliculas = [peliculaIT, peliculaHF, peliculaD, peliculaDeep]
         self.entradas = []
 
+
 class CineStark(Cine):
     def __init__(self):
         peliculaD = Pelicula(1, 'Desparecido')
@@ -60,8 +67,9 @@ class CineStark(Cine):
         self.lista_peliculas = [peliculaD, peliculaDeep]
         self.entradas = []
 
+
 def main():
-    terminado = False;
+    terminado = False
     cineFactory = CineFactory()
     while not terminado:
         print('Ingrese la opción que desea realizar')
@@ -103,9 +111,9 @@ def main():
             print('1: CinePlaneta')
             print('2: CineStark')
             print('********************')
-            cine = input('Primero elija un cine:')
+            cine_id = input('Primero elija un cine:')
 
-            cine = cineFactory.obtener_cine(cine)
+            cine = cineFactory.obtener_cine(cine_id)
 
             peliculas = cine.listar_peliculas()
             for pelicula in peliculas:
@@ -117,10 +125,14 @@ def main():
                 print('Función: {}'.format(funcion))
             funcion_elegida = input('Funcion: ')
             cantidad_entradas = input('Ingrese cantidad de entradas: ')
-            codigo_entrada = cine.guardar_entrada(pelicula_elegida, funcion_elegida, cantidad_entradas)
+            codigo_entrada = cine.guardar_entrada(cine_id, pelicula_elegida, funcion_elegida, cantidad_entradas)
             print('Se realizó la compra de la entrada. Código es {}'.format(codigo_entrada))
         elif opcion == '0':
             terminado = True
+            c = conn.cursor()
+            for row in c.execute('SELECT * FROM entrada'):
+                print(row)
+            conn.close()
         else:
             print(opcion)
 

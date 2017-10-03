@@ -1,10 +1,12 @@
 import sys
 
+
 class Entrada:
     def __init__(self, pelicula_id, funcion, cantidad):
         self.pelicula_id = pelicula_id
         self.funcion = funcion
         self.cantidad = cantidad
+
 
 class Pelicula:
     def __init__(self, id, nombre):
@@ -38,7 +40,6 @@ class CinePlaneta:
         return len(self.entradas)
 
 
-
 class CineStark:
     def __init__(self):
         peliculaD = Pelicula(1, 'Desparecido')
@@ -60,6 +61,7 @@ class CineStark:
     def guardar_entrada(self, id_pelicula_elegida, funcion_elegida, cantidad):
         self.entradas.append(Entrada(id_pelicula_elegida, funcion_elegida, cantidad))
         return len(self.entradas)
+
 
 def main():
     terminado = False;
@@ -128,7 +130,6 @@ def main():
             terminado = True
         else:
             print(opcion)
-
 
 
 if __name__ == '__main__':
