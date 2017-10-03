@@ -31,6 +31,9 @@ class Cine:
         self.entradas.append(Entrada(id_pelicula_elegida, funcion_elegida, cantidad))
         return len(self.entradas)
 
+class AdapterPeliculas:
+
+
 class CinePlaneta(Cine):
     def __init__(self):
         peliculaIT = Pelicula(1, 'IT')
